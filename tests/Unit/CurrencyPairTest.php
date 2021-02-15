@@ -2,46 +2,69 @@
 
 namespace Dostrog\Larate\Tests\Unit;
 
-use Dostrog\Larate\Facades\LarateFacade;
-use Dostrog\Larate\Larate;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\File;
+use Dostrog\Larate\CurrencyPair;
 use Dostrog\Larate\Tests\TestCase;
+use InvalidArgumentException;
 
-class InstallLarateTest extends TestCase
+class CurrencyPairTest extends TestCase
 {
-    public const CONFIG_NAME = 'larate.php';
+    public const BASE_CURRENCY = 'EUR';
+    public const QUOTE_CURRENCY = 'USD';
 
-    public function setUp(): void
+    /** @test */
+    public function factory_method_is_correct(): void
     {
-        parent::setUp();
-
-        // make sure we're starting from a clean state
-        if (File::exists(config_path(self::CONFIG_NAME))) {
-            unlink(config_path(self::CONFIG_NAME));
-        }
+        $pair = CurrencyPair::createFromString(self::BASE_CURRENCY . '/' . self::QUOTE_CURRENCY);
+        self::assertInstanceOf(CurrencyPair::class, $pair);
     }
 
     /** @test */
-    public function the_install_command_copies_the_configuration(): void
+    public function constructor_is_correct(): void
     {
-        self::assertFalse(File::exists(config_path(self::CONFIG_NAME)));
-
-        Artisan::call('larate:install');
-
-        self::assertTrue(File::exists(config_path(self::CONFIG_NAME)));
+        $pair = new CurrencyPair(self::BASE_CURRENCY, self::BASE_CURRENCY);
+        self::assertInstanceOf(CurrencyPair::class, $pair);
     }
 
     /** @test */
-    public function the_class_registered_in_app_container(): void
+    public function constructor_first_argument_is_correct(): void
     {
-        self::assertInstanceOf(Larate::class, app('larate'));
+        $this->expectException(InvalidArgumentException::class);
+        $pair = new CurrencyPair(self::BASE_CURRENCY . 'foo', self::BASE_CURRENCY);
     }
 
     /** @test */
-    public function the_facade_is_aliased(): void
+    public function constructor_second_argument_is_correct(): void
     {
-        self::assertTrue(class_exists(LarateFacade::class));
-        self::assertInstanceOf(Larate::class, LarateFacade::getFacadeRoot());
+        $this->expectException(InvalidArgumentException::class);
+        $pair = new CurrencyPair(self::BASE_CURRENCY, self::BASE_CURRENCY . 'foo');
+    }
+
+    /** @test */
+    public function getters_is_correct(): void
+    {
+        $pair = new CurrencyPair(self::BASE_CURRENCY, self::BASE_CURRENCY);
+        self::assertTrue($pair->isIdentical());
+
+        $pair = new CurrencyPair(self::BASE_CURRENCY, self::QUOTE_CURRENCY);
+        self::assertNotTrue($pair->isIdentical());
+
+        self::assertSame(self::BASE_CURRENCY, $pair->getBaseCurrency());
+        self::assertSame(self::QUOTE_CURRENCY, $pair->getQuoteCurrency());
+    }
+
+    /** @test */
+    public function invalid_argument_exception_is_trow(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $pair = CurrencyPair::createFromString(self::BASE_CURRENCY . '+' . self::BASE_CURRENCY);
+    }
+
+    /** @test */
+    public function to_string_method_is_correct_implemented(): void
+    {
+        $expectedValue = self::BASE_CURRENCY . '/' . self::QUOTE_CURRENCY;
+
+        $pair = new CurrencyPair(self::BASE_CURRENCY, self::QUOTE_CURRENCY);
+        self::assertSame($expectedValue, (string) $pair);
     }
 }
