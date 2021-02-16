@@ -2,7 +2,6 @@
 
 namespace Dostrog\Larate\Tests\Unit;
 
-use Dostrog\Larate\CurrencyPair;
 use Dostrog\Larate\Tests\TestCase;
 use Dostrog\Larate\Validation;
 use InvalidArgumentException;
