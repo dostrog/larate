@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Dostrog\Larate\Tests;
+namespace Dostrog\Larate\Tests\Unit;
 
+use Dostrog\Larate\Tests\TestCase;
 use Dostrog\Larate\ExchangeRate;
 use Dostrog\Larate\CurrencyPair;
 use Illuminate\Support\Carbon;
