@@ -19,7 +19,12 @@ class CacheTest extends TestCase
 
     public function test_cache_helper_build_cache_key(): void
     {
-        $expectedKey = CacheHelper::CACHE_PREFIX . self::BASE_CURRENCY . '/' . self::QUOTE_CURRENCY . '_' . self::DATE;
+        $expectedKey = sprintf("%s_%s-%s_%s",
+            CacheHelper::CACHE_PREFIX,
+            self::BASE_CURRENCY,
+            self::QUOTE_CURRENCY,
+            self::DATE
+        );
 
         $er = new ExchangeRate(
             CurrencyPair::createFromString(self::BASE_CURRENCY . '/' . self::QUOTE_CURRENCY),
