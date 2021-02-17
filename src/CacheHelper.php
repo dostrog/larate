@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Dostrog\Larate;
 
-use Dostrog\Larate\Contracts\ExchangeRate as ExchangeRateContract;
-use RuntimeException;
+use DateTimeInterface;
+use Dostrog\Larate\Contracts\CurrencyPair as CurrencyPairContract;
 
 final class CacheHelper
 {
@@ -14,17 +14,16 @@ final class CacheHelper
      * Build the key that can be used for fetching or
      * storing items in the cache.
      *
-     * @param ExchangeRateContract $rate
-     *
+     * @param CurrencyPairContract $pair
+     * @param DateTimeInterface $date
      * @return string
-     * @throws RuntimeException
      */
-    public static function buildCacheKey(ExchangeRateContract $rate): string
+    public static function buildCacheKey(CurrencyPairContract $pair, DateTimeInterface $date): string
     {
         $cacheKey = sprintf("%s_%s_%s",
             self::CACHE_PREFIX,
-            $rate->getCurrencyPair(),
-            $rate->getDate()->format('Y-m-d')
+            $pair,
+            $date->format('Y-m-d')
         );
 
         // Replace characters reserved in PSR-16

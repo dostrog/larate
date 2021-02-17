@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Dostrog\Larate\Tests\Unit;
 
 use Dostrog\Larate\Tests\TestCase;
-use Dostrog\Larate\ExchangeRate;
 use Dostrog\Larate\CurrencyPair;
 use Illuminate\Support\Carbon;
 use Dostrog\Larate\CacheHelper;
@@ -26,33 +25,26 @@ class CacheTest extends TestCase
             self::DATE
         );
 
-        $er = new ExchangeRate(
+        self::assertEquals($expectedKey, CacheHelper::buildCacheKey(
             CurrencyPair::createFromString(self::BASE_CURRENCY . '/' . self::QUOTE_CURRENCY),
-            70.70,
-            Carbon::parse(self::DATE),
-            self::PROVIDER_NAME
-        );
-
-        self::assertEquals($expectedKey, CacheHelper::buildCacheKey($er));
+            Carbon::parse(self::DATE)
+        ));
     }
 
     public function test_cache_store(): void
     {
         $value = 70.70;
+        $pair = CurrencyPair::createFromString(self::BASE_CURRENCY . '/' . self::QUOTE_CURRENCY);
+        $date = Carbon::parse(self::DATE);
 
-        $er = new ExchangeRate(
-            CurrencyPair::createFromString(self::BASE_CURRENCY . '/' . self::QUOTE_CURRENCY),
-            $value,
-            Carbon::parse(self::DATE),
-            self::PROVIDER_NAME
-        );
+        $cacheKey = CacheHelper::buildCacheKey($pair, $date);
 
-        $cacheKey = CacheHelper::buildCacheKey($er);
-
-        Cache::put($cacheKey, $er->getValue());
+        Cache::put($cacheKey, $value);
 
         self::assertTrue(Cache::has($cacheKey));
-
         self::assertEquals($value, Cache::get($cacheKey));
+
+        Cache::forget($cacheKey);
+        self::assertNull(Cache::get($cacheKey));
     }
 }
