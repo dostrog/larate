@@ -1,0 +1,64 @@
+{
+    "name": "dostrog/larate",
+    "description": "Small library to access to currency exchange rates API of CBRF (Central Bank of Russian Federation) from Laravel",
+    "type": "library",
+    "keywords": [
+        "dostrog",
+        "larate",
+        "currency", "rates", "api", "laravel"
+    ],
+    "homepage": "https://github.com/dostrog/larate",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sergey Donin",
+            "email": "sergey.donin@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.4|^8.0",
+        "ext-simplexml": "*",
+        "ext-libxml": "*",
+        "ext-intl": "*",
+        "guzzlehttp/guzzle": "^7.2.0",
+        "moneyphp/money": "^3.3"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-master",
+        "orchestra/testbench": "^5.2 || ^6.0",
+        "phpunit/phpunit": "^9.5.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Dostrog\\Larate\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Dostrog\\Larate\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit --colors=always",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage",
+        "post-autoload-dump": [
+            "@php vendor/bin/testbench package:discover --ansi"
+        ]
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Dostrog\\Larate\\Providers\\LarateServiceProvider"
+            ],
+            "aliases": {
+                "Larate": "Dostrog\\Larate\\Facades\\LarateFacade"
+            }
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
