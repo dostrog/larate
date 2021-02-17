@@ -1,24 +1,29 @@
 <?php
+declare(strict_types=1);
 
 namespace Dostrog\Larate\Providers;
 
 use Dostrog\Larate\Commands\InstallLarate;
+use Dostrog\Larate\Contracts\ExchangeRateService;
 use Dostrog\Larate\Larate;
 use Illuminate\Support\ServiceProvider;
 
 class LarateServiceProvider extends ServiceProvider
 {
-    public function register()
+    public function register(): void
     {
         // Automatically apply the package configuration
         $this->mergeConfigFrom(__DIR__.'/../../config/larate.php', 'larate');
 
-        $this->app->singleton('larate', function($app) {
-            return new Larate();
-        });
+        $this->app->bind(
+            ExchangeRateService::class,
+            config('larate.service')[config('larate.default_base_currency')]
+        );
+
+        $this->app->singleton('larate', Larate::class);
     }
 
-    public function boot()
+    public function boot(): void
     {
         if ($this->app->runningInConsole()) {
 
@@ -28,17 +33,17 @@ class LarateServiceProvider extends ServiceProvider
 
             // Publishing the views.
             /*$this->publishes([
-                __DIR__.'/../resources/views' => resource_path('views/vendor/currtest'),
+                __DIR__.'/../resources/views' => resource_path('views/vendor/larate'),
             ], 'views');*/
 
             // Publishing assets.
             /*$this->publishes([
-                __DIR__.'/../resources/assets' => public_path('vendor/currtest'),
+                __DIR__.'/../resources/assets' => public_path('vendor/larate'),
             ], 'assets');*/
 
             // Publishing the translation files.
             /*$this->publishes([
-                __DIR__.'/../resources/lang' => resource_path('lang/vendor/currtest'),
+                __DIR__.'/../resources/lang' => resource_path('lang/vendor/larate'),
             ], 'lang');*/
 
             // Registering package commands.
