@@ -30,10 +30,6 @@ final class CacheHelper
         // Replace characters reserved in PSR-16
         $cacheKey = preg_replace('#[{}()/\\\@:]#', '-', $cacheKey);
 
-        if (strlen($cacheKey) > 64) {
-            throw new RuntimeException("Cache key length exceeds 64 characters ('$cacheKey'). This violates PSR-16 standard");
-        }
-
         return $cacheKey;
     }
 }
