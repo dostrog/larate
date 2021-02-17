@@ -15,7 +15,6 @@ class RussianCentralBankTest extends TestCase
     public const PROVIDER_NAME = 'cbrf';
     public const DATE = '2020-01-16';
 
-
     /** @test */
     public function rcb_parse_rate_data(): void
     {
