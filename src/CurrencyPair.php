@@ -78,9 +78,6 @@ final class CurrencyPair implements CurrencyPairContract
         return $this->baseCurrency === $this->quoteCurrency;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function __toString(): string
     {
         return sprintf('%s/%s', $this->baseCurrency, $this->quoteCurrency);
