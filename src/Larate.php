@@ -10,6 +10,7 @@ use Dostrog\Larate\Contracts\CurrencyPair as CurrencyPairContract;
 use Dostrog\Larate\Contracts\ExchangeRate as ExchangeRateContract;
 use Dostrog\Larate\Contracts\ExchangeRateService as ExchangeRateServiceContract;
 use Dostrog\Larate\Contracts\ExchangeRateProvider as ExchangeRateProviderContract;
+use Dostrog\Larate\Services\NationalBankOfUkraine;
 use Illuminate\Support\Carbon;
 
 class Larate implements ExchangeRateProviderContract
@@ -21,12 +22,15 @@ class Larate implements ExchangeRateProviderContract
 
     public static function createForBaseCurrency(string $baseCurrency = 'RUB'): Larate
     {
-        if (isset(config('larate.service')[$baseCurrency])
+        if ( isset( config('larate.service')[$baseCurrency])
             && class_exists(config('larate.service')[$baseCurrency])) {
-            return new self( new (config('larate.service')[$baseCurrency]));
+
+            $serviceClass = config('larate.service.' . $baseCurrency);
+            return new self( new $serviceClass );
         }
 
-        return new self( new (config('larate.service')['RUB']));
+        $serviceClass = config('larate.service.RUB');
+        return new self( new $serviceClass );
     }
 
     /**

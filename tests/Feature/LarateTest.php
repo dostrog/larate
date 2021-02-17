@@ -69,8 +69,10 @@ class LarateTest extends TestCase
     public function test_larate_factory_method(): void
     {
         $provider = Larate::createForBaseCurrency('RUB');
-
         self::assertEquals('cbrf', $provider->getProviderName());
+
+        $provider = Larate::createForBaseCurrency('UAH');
+        self::assertEquals('nbu', $provider->getProviderName());
 
         $provider = Larate::createForBaseCurrency('foo');
         self::assertEquals('cbrf', $provider->getProviderName());
