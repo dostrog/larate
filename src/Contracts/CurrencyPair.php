@@ -25,5 +25,4 @@ interface CurrencyPair
      * @return bool
      */
     public function isIdentical(): bool;
-
 }

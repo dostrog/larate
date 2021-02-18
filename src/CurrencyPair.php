@@ -45,7 +45,7 @@ final class CurrencyPair implements CurrencyPairContract
     public static function createFromString(string $string): CurrencyPairContract
     {
         $matches = [];
-        if (!preg_match('#^([A-Z0-9]{3,})/([A-Z0-9]{3,})$#', $string, $matches)) {
+        if (! preg_match('#^([A-Z0-9]{3,})/([A-Z0-9]{3,})$#', $string, $matches)) {
             throw new InvalidArgumentException('The currency pair must be in the form "EUR/USD".');
         }
 

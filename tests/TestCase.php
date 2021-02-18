@@ -2,9 +2,9 @@
 
 namespace Dostrog\Larate\Tests;
 
-use Orchestra\Testbench\TestCase as Orchestra;
-use Dostrog\Larate\Providers\LarateServiceProvider;
 use Dostrog\Larate\Facades\LarateFacade;
+use Dostrog\Larate\Providers\LarateServiceProvider;
+use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {

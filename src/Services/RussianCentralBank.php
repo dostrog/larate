@@ -4,18 +4,16 @@ declare(strict_types=1);
 namespace Dostrog\Larate\Services;
 
 use DateTimeInterface;
-use Dostrog\Larate\Contracts\CurrencyPair;
 use Dostrog\Larate\Contracts\CurrencyPair as CurrencyPairContract;
-use Dostrog\Larate\ExchangeRate;
 use Dostrog\Larate\Contracts\ExchangeRate as ExchangeRateContract;
 use Dostrog\Larate\Contracts\ExchangeRateService;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Carbon;
+use Dostrog\Larate\ExchangeRate;
 use Dostrog\Larate\StringHelper;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Http;
 use NumberFormatter;
 use RuntimeException;
 use Throwable;
-
 
 class RussianCentralBank implements ExchangeRateService
 {
@@ -65,12 +63,12 @@ class RussianCentralBank implements ExchangeRateService
 
         $quoteCurrencyData = $element->xpath('./Valute[CharCode="' . $quoteCurrency . '"]');
 
-        if (empty($quoteCurrencyData) || !$date) {
+        if (empty($quoteCurrencyData) || ! $date) {
             throw new RuntimeException("No currency rate for {$quoteCurrency} on date " . $date->format('d/m/Y'));
         }
 
         $valueStr = (string) $quoteCurrencyData['0']->Value;
-        $fmt = NumberFormatter::create( 'ru_RU', NumberFormatter::DECIMAL );
+        $fmt = NumberFormatter::create('ru_RU', NumberFormatter::DECIMAL);
         $value = $fmt->parse($valueStr);
 
         if ($value === false) {

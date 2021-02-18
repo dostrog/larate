@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Dostrog\Larate;
 
-use Money\Currencies\ISOCurrencies;
-use Money\Currency;
 use Illuminate\Support\Facades\Validator;
 use InvalidArgumentException;
+use Money\Currencies\ISOCurrencies;
+use Money\Currency;
 
 class Validation
 {
