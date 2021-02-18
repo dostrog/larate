@@ -120,21 +120,21 @@ CONTENT;
      * @test
      *
      */
-    public function rcb_get_latest_exchange_rate(): void
-    {
-        // CBRF set rates at 12
-        if (Carbon::now()->hour <= 12) {
-            return;
-        }
-
-        $rcb = new RussianCentralBank();
-        $pair = new CurrencyPair(self::BASE_CURRENCY, self::QUOTE_CURRENCY);
-
-        $v1 = $rcb->getExchangeRate($pair, Carbon::now()->addDay())->getValue();
-        $v2 = $rcb->getExchangeRate($pair)->getValue();
-
-        self::assertEquals($v1, $v2);
-    }
+//    public function rcb_get_latest_exchange_rate(): void
+//    {
+//        // CBRF set rates at 12
+//        if (Carbon::now()->hour <= 12) {
+//            return;
+//        }
+//
+//        $rcb = new RussianCentralBank();
+//        $pair = new CurrencyPair(self::BASE_CURRENCY, self::QUOTE_CURRENCY);
+//
+//        $v1 = $rcb->getExchangeRate($pair, Carbon::now()->addDay())->getValue();
+//        $v2 = $rcb->getExchangeRate($pair)->getValue();
+//
+//        self::assertEquals($v1, $v2);
+//    }
 
     /** @test */
     public function rcb_get_exchange_rate_for_no_currency_on_period(): void
