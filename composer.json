@@ -1,11 +1,10 @@
 {
     "name": "dostrog/larate",
-    "description": "Small library to access to currency exchange rates API of CBRF (Central Bank of Russian Federation) from Laravel",
+    "description": "Small library to access to currency exchange rates API of CBRF (Bank of Russia) and NBU (National Bank of Ukraine) from Laravel",
     "type": "library",
     "keywords": [
-        "dostrog",
-        "larate",
-        "currency", "rates", "api", "laravel"
+        "dostrog", "larate", "api", "laravel",
+        "currency", "rates", "rub", "uah"
     ],
     "homepage": "https://github.com/dostrog/larate",
     "license": "MIT",
