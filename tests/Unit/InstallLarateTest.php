@@ -4,9 +4,9 @@ namespace Dostrog\Larate\Tests\Unit;
 
 use Dostrog\Larate\Facades\LarateFacade;
 use Dostrog\Larate\Larate;
+use Dostrog\Larate\Tests\TestCase;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
-use Dostrog\Larate\Tests\TestCase;
 
 class InstallLarateTest extends TestCase
 {

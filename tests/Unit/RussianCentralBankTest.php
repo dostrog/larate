@@ -2,9 +2,9 @@
 
 namespace Dostrog\Larate\Tests\Unit;
 
+use Dostrog\Larate\CurrencyPair;
 use Dostrog\Larate\Services\RussianCentralBank;
 use Dostrog\Larate\Tests\TestCase;
-use Dostrog\Larate\CurrencyPair;
 use Illuminate\Support\Carbon;
 use RuntimeException;
 
@@ -101,7 +101,6 @@ CONTENT;
         $this->expectException(RuntimeException::class);
         $rcb->parseRateData($content, 'EEK');
     }
-
 
     /** @test */
     public function rcb_get_exchange_rate_for_non_holiday(): void
