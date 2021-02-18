@@ -41,10 +41,7 @@
     },
     "scripts": {
         "test": "vendor/bin/phpunit --colors=always",
-        "test-coverage": "vendor/bin/phpunit --coverage-html coverage",
-        "post-autoload-dump": [
-            "@php vendor/bin/testbench package:discover --ansi"
-        ]
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
     },
     "config": {
         "sort-packages": true
@@ -58,6 +55,10 @@
                 "Larate": "Dostrog\\Larate\\Facades\\LarateFacade"
             }
         }
+    },
+    "support": {
+        "issues": "https://github.com/dostrog/larate/issues",
+        "source": "https://github.com/dostrog/larate"
     },
     "minimum-stability": "dev",
     "prefer-stable": true
