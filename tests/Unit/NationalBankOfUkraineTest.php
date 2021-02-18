@@ -2,9 +2,9 @@
 
 namespace Dostrog\Larate\Tests\Unit;
 
+use Dostrog\Larate\CurrencyPair;
 use Dostrog\Larate\Services\NationalBankOfUkraine;
 use Dostrog\Larate\Tests\TestCase;
-use Dostrog\Larate\CurrencyPair;
 use Illuminate\Support\Carbon;
 use RuntimeException;
 
@@ -83,7 +83,6 @@ CONTENT;
     /** @test */
     public function nbu_parse_rate_data_wo_date(): void
     {
-
         $content = <<<CONTENT
 <?xml version="1.0" encoding="utf-8"?>
 <exchange>
@@ -102,7 +101,6 @@ CONTENT;
         $this->expectException(RuntimeException::class);
         $rcb->parseRateData($content, 'USD');
     }
-
 
     /** @test */
     public function nbu_get_exchange_rate_for_non_holiday(): void

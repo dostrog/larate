@@ -4,18 +4,16 @@ declare(strict_types=1);
 namespace Dostrog\Larate\Services;
 
 use DateTimeInterface;
-use Dostrog\Larate\Contracts\CurrencyPair;
 use Dostrog\Larate\Contracts\CurrencyPair as CurrencyPairContract;
-use Dostrog\Larate\ExchangeRate;
 use Dostrog\Larate\Contracts\ExchangeRate as ExchangeRateContract;
 use Dostrog\Larate\Contracts\ExchangeRateService;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Carbon;
+use Dostrog\Larate\ExchangeRate;
 use Dostrog\Larate\StringHelper;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Http;
 use NumberFormatter;
 use RuntimeException;
 use Throwable;
-
 
 class NationalBankOfUkraine implements ExchangeRateService
 {
@@ -68,7 +66,7 @@ class NationalBankOfUkraine implements ExchangeRateService
         }
 
         $valueStr = (string) $item->rate;
-        $fmt = NumberFormatter::create( 'ua_UA', NumberFormatter::DECIMAL );
+        $fmt = NumberFormatter::create('ua_UA', NumberFormatter::DECIMAL);
         $value = $fmt->parse($valueStr);
 
         if ($value === false) {
