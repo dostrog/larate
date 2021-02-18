@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Dostrog\Larate\Tests\Unit;
 
-use Dostrog\Larate\Tests\TestCase;
-use Dostrog\Larate\CurrencyPair;
-use Illuminate\Support\Carbon;
 use Dostrog\Larate\CacheHelper;
+use Dostrog\Larate\CurrencyPair;
+use Dostrog\Larate\Tests\TestCase;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 
 class CacheTest extends TestCase
@@ -18,7 +18,8 @@ class CacheTest extends TestCase
 
     public function test_cache_helper_build_cache_key(): void
     {
-        $expectedKey = sprintf("%s_%s-%s_%s",
+        $expectedKey = sprintf(
+            "%s_%s-%s_%s",
             CacheHelper::CACHE_PREFIX,
             self::BASE_CURRENCY,
             self::QUOTE_CURRENCY,

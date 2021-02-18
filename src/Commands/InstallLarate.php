@@ -2,8 +2,8 @@
 
 namespace Dostrog\Larate\Commands;
 
-use Illuminate\Console\Command;
 use Dostrog\Larate\Providers\LarateServiceProvider;
+use Illuminate\Console\Command;
 
 class InstallLarate extends Command
 {
@@ -28,7 +28,7 @@ class InstallLarate extends Command
 
         $this->call('vendor:publish', [
             '--provider' => LarateServiceProvider::class,
-            '--tag' => "config"
+            '--tag' => "config",
         ]);
     }
 }

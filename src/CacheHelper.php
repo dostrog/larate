@@ -20,7 +20,8 @@ final class CacheHelper
      */
     public static function buildCacheKey(CurrencyPairContract $pair, DateTimeInterface $date): string
     {
-        $cacheKey = sprintf("%s_%s_%s",
+        $cacheKey = sprintf(
+            "%s_%s_%s",
             self::CACHE_PREFIX,
             $pair,
             $date->format('Y-m-d')

@@ -21,7 +21,6 @@ interface ExchangeRate
      */
     public function getDate(): DateTimeInterface;
 
-
     /**
      * Gets the name of the provider that returned this rate.
      *

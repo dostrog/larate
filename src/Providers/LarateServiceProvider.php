@@ -26,7 +26,6 @@ class LarateServiceProvider extends ServiceProvider
     public function boot(): void
     {
         if ($this->app->runningInConsole()) {
-
             $this->publishes([
                 __DIR__.'/../../config/larate.php' => config_path('larate.php'),
             ], 'config');

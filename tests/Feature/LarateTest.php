@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace Dostrog\Larate\Tests\Feature;
 
+use Dostrog\Larate\CacheHelper;
+use Dostrog\Larate\CurrencyPair;
 use Dostrog\Larate\Facades\LarateFacade;
 use Dostrog\Larate\Larate;
 use Dostrog\Larate\Tests\TestCase;
-use Dostrog\Larate\CurrencyPair;
 use Illuminate\Support\Carbon;
-use Dostrog\Larate\CacheHelper;
 use Illuminate\Support\Facades\Cache;
 
 class LarateTest extends TestCase
