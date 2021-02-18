@@ -1,4 +1,4 @@
-# Access to CBRF currencies rates from Laravel
+# Larate
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/dostrog/larate.svg?style=flat-square)](https://packagist.org/packages/dostrog/larate)
 [![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/dostrog/larate/run-tests?label=tests/master)](https://github.com/dostrog/larate/workflows/Tests/badge.svg?branch=master)
