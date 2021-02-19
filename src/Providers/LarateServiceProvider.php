@@ -41,9 +41,9 @@ class LarateServiceProvider extends ServiceProvider
             ], 'assets');*/
 
             // Publishing the translation files.
-            /*$this->publishes([
-                __DIR__.'/../resources/lang' => resource_path('lang/vendor/larate'),
-            ], 'lang');*/
+            $this->publishes([
+                __DIR__.'/../../resources/lang' => resource_path('lang/vendor/larate'),
+            ], 'lang');
 
             // Registering package commands.
             // $this->commands([]);
@@ -51,6 +51,8 @@ class LarateServiceProvider extends ServiceProvider
             $this->commands([
                 InstallLarate::class,
             ]);
+
+            $this->loadTranslationsFrom(__DIR__.'/../../resources/lang/', 'larate');
         }
     }
 }

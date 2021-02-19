@@ -36,11 +36,11 @@ class NationalBankOfUkraine implements ExchangeRateService
                 : Http::get(self::URL);
         } catch (Throwable $th) {
             // todo: log error
-            throw new RuntimeException("Error requesting provider: " . self::NAME);
+            throw new RuntimeException(trans('larate::error.request', ['provider' => self::NAME]));
         }
 
         if ($response->failed()) {
-            throw new RuntimeException("Error requesting provider " . self::NAME);
+            throw new RuntimeException(trans('larate::error.request', ['provider' => self::NAME]));
         }
 
         return $response->body();
@@ -53,7 +53,7 @@ class NationalBankOfUkraine implements ExchangeRateService
         $elements = $element->xpath('./currency[cc="' . $quoteCurrency . '"]');
 
         if (empty($elements)) {
-            throw new RuntimeException("Unexpected response: no requested currency '{$quoteCurrency}' in server response.");
+            throw new RuntimeException(trans('larate::error.nocurrency', ['currency' => $quoteCurrency]));
         }
 
         $item = $elements[0];
@@ -62,7 +62,7 @@ class NationalBankOfUkraine implements ExchangeRateService
             $date = Carbon::createFromFormat('!d.m.Y', (string) $item->exchangedate);
         } catch (Throwable $th) {
             // todo: log error
-            throw new RuntimeException("Unexpected response: " . $th->getMessage());
+            throw new RuntimeException(trans('larate::error.badresponse', ['message' => $th->getMessage()]));
         }
 
         $valueStr = (string) $item->rate;
@@ -70,7 +70,7 @@ class NationalBankOfUkraine implements ExchangeRateService
         $value = $fmt->parse($valueStr);
 
         if ($value === false) {
-            throw new RuntimeException("Ошибка преобразования строки '{$value}' в тип float. Невозможно импортировать.");
+            throw new RuntimeException(trans('larate::error.badfloat', ['value' => $value]));
         }
 
         return [$value, $date];

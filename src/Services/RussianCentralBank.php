@@ -36,11 +36,11 @@ class RussianCentralBank implements ExchangeRateService
                 : Http::get(self::URL);
         } catch (Throwable $th) {
             // todo: log error
-            throw new RuntimeException("Error requesting provider: " . self::NAME);
+            throw new RuntimeException(trans('larate::error.request', ['provider' => self::NAME]));
         }
 
         if ($response->failed()) {
-            throw new RuntimeException("Error requesting provider " . self::NAME);
+            throw new RuntimeException(trans('larate::error.request', ['provider' => self::NAME]));
         }
 
         return $response->body();
@@ -51,20 +51,23 @@ class RussianCentralBank implements ExchangeRateService
         $element = StringHelper::xmlToElement($content);
 
         if (empty($element['Date'])) {
-            throw new RuntimeException("Unexpected response: no 'Date' in server response.");
+            throw new RuntimeException(trans('larate::error.nodate'));
         }
 
         try {
             $date = Carbon::createFromFormat('!d.m.Y', (string) $element['Date']);
         } catch (Throwable $th) {
             // todo: log error
-            throw new RuntimeException("Unexpected response: " . $th->getMessage());
+            throw new RuntimeException(trans('larate::error.badresponse', ['message' => $th->getMessage()]));
         }
 
         $quoteCurrencyData = $element->xpath('./Valute[CharCode="' . $quoteCurrency . '"]');
 
         if (empty($quoteCurrencyData) || ! $date) {
-            throw new RuntimeException("No currency rate for {$quoteCurrency} on date " . $date->format('d/m/Y'));
+            throw new RuntimeException(trans('larate::error.nocurrency', [
+                'currency' => $quoteCurrency,
+                'date' => $date->format('d/m/Y'),
+            ]));
         }
 
         $valueStr = (string) $quoteCurrencyData['0']->Value;
@@ -72,7 +75,7 @@ class RussianCentralBank implements ExchangeRateService
         $value = $fmt->parse($valueStr);
 
         if ($value === false) {
-            throw new RuntimeException("Ошибка преобразования строки '{$value}' в тип float. Невозможно импортировать.");
+            throw new RuntimeException(trans('larate::error.badfloat', ['value' => $value]));
         }
 
         $nominalStr = (string) $quoteCurrencyData['0']->Nominal;
