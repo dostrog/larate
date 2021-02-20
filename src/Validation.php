@@ -25,7 +25,7 @@ class Validation
             'code' => [
                 function ($attribute, $value, $fail) use ($currencies): void {
                     if (! $currencies->contains(new Currency($value))) {
-                        $fail( trans('larate::validation.code', ['code' => $value]) );
+                        $fail(trans('larate::validation.code', ['code' => $value]));
                     }
                 },
             ],
