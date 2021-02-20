@@ -6,44 +6,25 @@ namespace Dostrog\Larate\Services;
 use DateTimeInterface;
 use Dostrog\Larate\Contracts\CurrencyPair as CurrencyPairContract;
 use Dostrog\Larate\Contracts\ExchangeRate as ExchangeRateContract;
-use Dostrog\Larate\Contracts\ExchangeRateService;
 use Dostrog\Larate\ExchangeRate;
 use Dostrog\Larate\StringHelper;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\Factory;
 use NumberFormatter;
 use RuntimeException;
 use Throwable;
 
-class NationalBankOfUkraine implements ExchangeRateService
+class NationalBankOfUkraine extends HttpService
 {
-    public const NAME = 'nbu';
     public const URL = 'https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange';
+    public const NAME = 'nbu';
 
-    /**
-     * @inheritDoc
-     */
-    public function getName(): string
+    public function __construct(Factory $http = null)
     {
-        return self::NAME;
-    }
+        parent::__construct($http);
 
-    protected function makeRequest(array $params = null): string
-    {
-        try {
-            $response = (isset($params))
-                ? Http::get(self::URL, $params)
-                : Http::get(self::URL);
-        } catch (Throwable $th) {
-            // todo: log error
-            throw new RuntimeException(trans('larate::error.request', ['provider' => self::NAME]));
-        }
-
-        if ($response->failed()) {
-            throw new RuntimeException(trans('larate::error.request', ['provider' => self::NAME]));
-        }
-
-        return $response->body();
+        $this->url = self::URL;
+        $this->serviceName = self::NAME;
     }
 
     public function parseRateData(string $content, string $quoteCurrency): array
@@ -61,7 +42,6 @@ class NationalBankOfUkraine implements ExchangeRateService
         try {
             $date = Carbon::createFromFormat('!d.m.Y', (string) $item->exchangedate);
         } catch (Throwable $th) {
-            // todo: log error
             throw new RuntimeException(trans('larate::error.badresponse', ['message' => $th->getMessage()]));
         }
 
@@ -83,7 +63,7 @@ class NationalBankOfUkraine implements ExchangeRateService
     {
         $quoteCurrency = $currencyPair->getQuoteCurrency();
 
-        $content = isset($date)
+        $content = ($date !== null)
             ? $this->makeRequest([
                 'date' => $date->format('Ymd'),
                 'valcode' => $quoteCurrency,
