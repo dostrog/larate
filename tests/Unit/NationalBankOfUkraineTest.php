@@ -219,7 +219,7 @@ CONTENT;
     /** @test */
     public function nbu_get_exchange_rate_response_failed(): void
     {
-        $httpClient = Http::fake(fn($request) => Http::response([], 500));
+        $httpClient = Http::fake(fn ($request) => Http::response([], 500));
 
         $rcb = new NationalBankOfUkraine($httpClient);
         $pair = new CurrencyPair(self::BASE_CURRENCY, self::QUOTE_CURRENCY);

@@ -58,12 +58,13 @@ class Larate implements ExchangeRateProviderContract
 
         return $rate;
     }
+
     public static function createForBaseCurrency(string $baseCurrency = 'RUB', CacheInterface $cache = null): Larate
     {
         $serviceClass = isset(config('larate.service')[$baseCurrency]) && class_exists(config('larate.service')[$baseCurrency])
             ? config('larate.service.' . $baseCurrency)
             : config('larate.service.RUB');
 
-        return new self( new $serviceClass,$cache ?? app()->make('cache.store') );
+        return new self(new $serviceClass, $cache ?? app()->make('cache.store'));
     }
 }
