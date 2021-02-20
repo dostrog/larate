@@ -21,6 +21,7 @@ abstract class HttpService implements ExchangeRateService
     {
         $this->http = $http ?? new Factory();
     }
+
     /**
      * @inheritDoc
      */
