@@ -41,8 +41,8 @@ class NationalBankOfUkraine extends HttpService
 
         try {
             $date = Carbon::createFromFormat('!d.m.Y', (string) $item->exchangedate);
-        } catch (Throwable $th) {
-            throw new RuntimeException(trans('larate::error.badresponse', ['message' => $th->getMessage()]));
+        } catch (Throwable $throwable) {
+            throw new RuntimeException(trans('larate::error.badresponse', ['message' => $throwable->getMessage()]), $throwable->getCode(), $throwable);
         }
 
         $valueStr = (string) $item->rate;

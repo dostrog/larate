@@ -5,6 +5,8 @@ namespace Dostrog\Larate;
 
 use Dostrog\Larate\Contracts\CurrencyPair as CurrencyPairContract;
 use InvalidArgumentException;
+use Safe\Exceptions\PcreException;
+use Safe\Exceptions\StringsException;
 
 final class CurrencyPair implements CurrencyPairContract
 {
@@ -34,24 +36,11 @@ final class CurrencyPair implements CurrencyPairContract
     }
 
     /**
-     * Creates a currency pair from a string.
-     *
-     * @param string $string A string in the form EUR/USD
-     *
-     * @throws InvalidArgumentException
-     *
-     * @return CurrencyPairContract
+     * @throws StringsException
      */
-    public static function createFromString(string $string): CurrencyPairContract
+    public function __toString(): string
     {
-        $matches = [];
-        if (! preg_match('#^([A-Z0-9]{3,})/([A-Z0-9]{3,})$#', $string, $matches)) {
-            throw new InvalidArgumentException(trans('larate::error.badpair'));
-        }
-
-        $parts = explode('/', $string);
-
-        return new self($parts[0], $parts[1]);
+        return \Safe\sprintf('%s/%s', $this->baseCurrency, $this->quoteCurrency);
     }
 
     /**
@@ -78,8 +67,23 @@ final class CurrencyPair implements CurrencyPairContract
         return $this->baseCurrency === $this->quoteCurrency;
     }
 
-    public function __toString(): string
+    /**
+     * Creates a currency pair from a string.
+     *
+     * @param string $string A string in the form EUR/USD
+     *
+     * @throws InvalidArgumentException
+     * @throws PcreException
+     */
+    public static function createFromString(string $string): CurrencyPairContract
     {
-        return sprintf('%s/%s', $this->baseCurrency, $this->quoteCurrency);
+        $matches = [];
+        if (\Safe\preg_match('#^([A-Z0-9]{3,})/([A-Z0-9]{3,})$#', $string, $matches) === 0) {
+            throw new InvalidArgumentException(trans('larate::error.badpair'));
+        }
+
+        $parts = explode('/', $string);
+
+        return new self($parts[0], $parts[1]);
     }
 }

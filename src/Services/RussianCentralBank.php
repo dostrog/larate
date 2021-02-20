@@ -37,9 +37,8 @@ class RussianCentralBank extends HttpService
 
         try {
             $date = Carbon::createFromFormat('!d.m.Y', (string) $element['Date']);
-        } catch (Throwable $th) {
-            // todo: log error
-            throw new RuntimeException(trans('larate::error.badresponse', ['message' => $th->getMessage()]));
+        } catch (Throwable $throwable) {
+            throw new RuntimeException(trans('larate::error.badresponse', ['message' => $throwable->getMessage()]), $throwable->getCode(), $throwable);
         }
 
         $quoteCurrencyData = $element->xpath('./Valute[CharCode="' . $quoteCurrency . '"]');

@@ -10,9 +10,21 @@ use Illuminate\Support\Carbon;
 
 class ExchangeRateTest extends TestCase
 {
+    /**
+     * @var string
+     */
     public const BASE_CURRENCY = 'EUR';
+    /**
+     * @var string
+     */
     public const QUOTE_CURRENCY = 'USD';
+    /**
+     * @var string
+     */
     public const PROVIDER_NAME = 'cbrf';
+    /**
+     * @var string
+     */
     public const DATE = '2020-01-16';
 
     /** @test */

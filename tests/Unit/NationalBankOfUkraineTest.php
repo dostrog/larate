@@ -13,9 +13,21 @@ use RuntimeException;
 
 class NationalBankOfUkraineTest extends TestCase
 {
+    /**
+     * @var string
+     */
     public const BASE_CURRENCY = 'UAH';
+    /**
+     * @var string
+     */
     public const QUOTE_CURRENCY = 'USD';
+    /**
+     * @var string
+     */
     public const PROVIDER_NAME = 'nbu';
+    /**
+     * @var string
+     */
     public const DATE = '2020-01-16';
     public ExchangeRateService $service;
 
@@ -207,9 +219,7 @@ CONTENT;
     /** @test */
     public function nbu_get_exchange_rate_response_failed(): void
     {
-        $httpClient = Http::fake(function ($request) {
-            return Http::response([], 500);
-        });
+        $httpClient = Http::fake(fn($request) => Http::response([], 500));
 
         $rcb = new NationalBankOfUkraine($httpClient);
         $pair = new CurrencyPair(self::BASE_CURRENCY, self::QUOTE_CURRENCY);

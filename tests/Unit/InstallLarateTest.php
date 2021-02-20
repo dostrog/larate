@@ -7,18 +7,25 @@ use Dostrog\Larate\Larate;
 use Dostrog\Larate\Tests\TestCase;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
+use Safe\Exceptions\FilesystemException;
 
 class InstallLarateTest extends TestCase
 {
+    /**
+     * @var string
+     */
     public const CONFIG_NAME = 'larate.php';
 
-    public function setUp(): void
+    /**
+     * @throws FilesystemException
+     */
+    protected function setUp(): void
     {
         parent::setUp();
 
         // make sure we're starting from a clean state
         if (File::exists(config_path(self::CONFIG_NAME))) {
-            unlink(config_path(self::CONFIG_NAME));
+            \Safe\unlink(config_path(self::CONFIG_NAME));
         }
     }
 

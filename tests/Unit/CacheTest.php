@@ -11,14 +11,26 @@ use Illuminate\Support\Facades\Cache;
 
 class CacheTest extends TestCase
 {
+    /**
+     * @var string
+     */
     public const BASE_CURRENCY = 'RUB';
+    /**
+     * @var string
+     */
     public const QUOTE_CURRENCY = 'EUR';
+    /**
+     * @var string
+     */
     public const PROVIDER_NAME = 'cbrf';
+    /**
+     * @var string
+     */
     public const DATE = '2020-01-16';
 
     public function test_cache_helper_build_cache_key(): void
     {
-        $expectedKey = sprintf(
+        $expectedKey = \Safe\sprintf(
             "%s_%s-%s_%s",
             CacheHelper::CACHE_PREFIX,
             self::BASE_CURRENCY,

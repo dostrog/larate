@@ -8,7 +8,13 @@ use InvalidArgumentException;
 
 class CurrencyPairTest extends TestCase
 {
+    /**
+     * @var string
+     */
     public const BASE_CURRENCY = 'EUR';
+    /**
+     * @var string
+     */
     public const QUOTE_CURRENCY = 'USD';
 
     /** @test */
