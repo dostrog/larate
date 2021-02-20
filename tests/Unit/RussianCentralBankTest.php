@@ -55,7 +55,7 @@ class RussianCentralBankTest extends TestCase
 CONTENT;
 
         self::assertEquals([
-            'value' => 418.1800, 'nominal' => 1.0, 'date' => Carbon::parse('16.01.1996')
+            'value' => 418.1800, 'nominal' => 1.0, 'date' => Carbon::parse('16.01.1996'),
         ], $this->service->parseRateData($content, 'EEK'));
     }
 
