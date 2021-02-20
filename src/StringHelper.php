@@ -27,7 +27,7 @@ final class StringHelper
         } catch (Throwable $e) {
             libxml_use_internal_errors($internalErrors);
 
-            throw new RuntimeException( trans('larate::error.badxml', ['message' => $e->getMessage()]) );
+            throw new RuntimeException(trans('larate::error.badxml', ['message' => $e->getMessage()]));
         }
 
         return $xml;

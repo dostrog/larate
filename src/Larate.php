@@ -29,7 +29,7 @@ class Larate implements ExchangeRateProviderContract
             ? config('larate.service.' . $baseCurrency)
             : config('larate.service.RUB');
 
-        return new self( new $serviceClass,$cache ?? app()->make('cache.store') );
+        return new self(new $serviceClass, $cache ?? app()->make('cache.store'));
     }
 
     /**
