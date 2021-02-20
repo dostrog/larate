@@ -61,7 +61,11 @@ class RussianCentralBank extends HttpService
         $nominalStr = (string) $quoteCurrencyData['0']->Nominal;
         $nominal = $fmt->parse($nominalStr);
 
-        return [$value, $nominal, $date];
+        return [
+            'value' => $value,
+            'nominal' => $nominal,
+            'date' => $date,
+        ];
     }
 
     /**
@@ -75,7 +79,7 @@ class RussianCentralBank extends HttpService
             ? $this->makeRequest(['date_req' => $date->format('d/m/Y')])
             : $this->makeRequest();
 
-        [$value, $nominal, $responseDate] = $this->parseRateData($content, $quoteCurrency);
+        ['value' => $value, 'nominal' => $nominal, 'date' => $responseDate] = $this->parseRateData($content, $quoteCurrency);
 
         return new ExchangeRate($currencyPair, $value / $nominal, $responseDate, $this->getName());
     }

@@ -6,6 +6,7 @@ use Dostrog\Larate\Contracts\ExchangeRateService;
 use Dostrog\Larate\CurrencyPair;
 use Dostrog\Larate\Services\RussianCentralBank;
 use Dostrog\Larate\Tests\TestCase;
+use Exception;
 use Illuminate\Http\Client\Factory;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
@@ -53,7 +54,9 @@ class RussianCentralBankTest extends TestCase
 </ValCurs>
 CONTENT;
 
-        self::assertEquals([418.1800, 1.0, Carbon::parse('16.01.1996')], $this->service->parseRateData($content, 'EEK'));
+        self::assertEquals([
+            'value' => 418.1800, 'nominal' => 1.0, 'date' => Carbon::parse('16.01.1996')
+        ], $this->service->parseRateData($content, 'EEK'));
     }
 
     /** @test */
@@ -152,7 +155,7 @@ CONTENT;
         $rate1 = $this->service->getExchangeRate($pair, Carbon::parse($date1))->getValue();
 
         self::assertEquals($expected, $rate0);
-        self::assertEquals($rate0, $rate1);
+        self::assertSame($rate0, $rate1);
     }
 
     /** @test */
@@ -179,7 +182,7 @@ CONTENT;
         $httpClient = $this->mock(Factory::class);
         $httpClient->shouldReceive('get')
             ->withSomeOfArgs(['url' => RussianCentralBank::URL])
-            ->andThrow(\Exception::class);
+            ->andThrow(Exception::class);
 
 
         $rcb = new RussianCentralBank($httpClient);
@@ -215,6 +218,6 @@ CONTENT;
     /** @test */
     public function rcb_get_name(): void
     {
-        self::assertEquals(self::PROVIDER_NAME, $this->service->getName());
+        self::assertSame(self::PROVIDER_NAME, $this->service->getName());
     }
 }
