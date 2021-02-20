@@ -6,44 +6,25 @@ namespace Dostrog\Larate\Services;
 use DateTimeInterface;
 use Dostrog\Larate\Contracts\CurrencyPair as CurrencyPairContract;
 use Dostrog\Larate\Contracts\ExchangeRate as ExchangeRateContract;
-use Dostrog\Larate\Contracts\ExchangeRateService;
 use Dostrog\Larate\ExchangeRate;
 use Dostrog\Larate\StringHelper;
+use Illuminate\Http\Client\Factory;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Http;
 use NumberFormatter;
 use RuntimeException;
 use Throwable;
 
-class RussianCentralBank implements ExchangeRateService
+class RussianCentralBank extends HttpService
 {
-    public const NAME = 'cbrf';
     public const URL = 'https://www.cbr.ru/scripts/XML_daily.asp';
+    public const NAME = 'cbrf';
 
-    /**
-     * @inheritDoc
-     */
-    public function getName(): string
+    public function __construct(Factory $http = null)
     {
-        return self::NAME;
-    }
+        parent::__construct($http);
 
-    protected function makeRequest(array $params = null): string
-    {
-        try {
-            $response = (isset($params))
-                ? Http::get(self::URL, $params)
-                : Http::get(self::URL);
-        } catch (Throwable $th) {
-            // todo: log error
-            throw new RuntimeException("Error requesting provider: " . self::NAME);
-        }
-
-        if ($response->failed()) {
-            throw new RuntimeException("Error requesting provider " . self::NAME);
-        }
-
-        return $response->body();
+        $this->url = self::URL;
+        $this->serviceName = self::NAME;
     }
 
     public function parseRateData(string $content, string $quoteCurrency): array
@@ -51,20 +32,23 @@ class RussianCentralBank implements ExchangeRateService
         $element = StringHelper::xmlToElement($content);
 
         if (empty($element['Date'])) {
-            throw new RuntimeException("Unexpected response: no 'Date' in server response.");
+            throw new RuntimeException(trans('larate::error.nodate'));
         }
 
         try {
             $date = Carbon::createFromFormat('!d.m.Y', (string) $element['Date']);
         } catch (Throwable $th) {
             // todo: log error
-            throw new RuntimeException("Unexpected response: " . $th->getMessage());
+            throw new RuntimeException(trans('larate::error.badresponse', ['message' => $th->getMessage()]));
         }
 
         $quoteCurrencyData = $element->xpath('./Valute[CharCode="' . $quoteCurrency . '"]');
 
         if (empty($quoteCurrencyData) || ! $date) {
-            throw new RuntimeException("No currency rate for {$quoteCurrency} on date " . $date->format('d/m/Y'));
+            throw new RuntimeException(trans('larate::error.nocurrency', [
+                'currency' => $quoteCurrency,
+                'date' => $date->format('d/m/Y'),
+            ]));
         }
 
         $valueStr = (string) $quoteCurrencyData['0']->Value;
@@ -72,7 +56,7 @@ class RussianCentralBank implements ExchangeRateService
         $value = $fmt->parse($valueStr);
 
         if ($value === false) {
-            throw new RuntimeException("Ошибка преобразования строки '{$value}' в тип float. Невозможно импортировать.");
+            throw new RuntimeException(trans('larate::error.badfloat', ['value' => $value]));
         }
 
         $nominalStr = (string) $quoteCurrencyData['0']->Nominal;
@@ -88,7 +72,7 @@ class RussianCentralBank implements ExchangeRateService
     {
         $quoteCurrency = $currencyPair->getQuoteCurrency();
 
-        $content = isset($date)
+        $content = ($date !== null)
             ? $this->makeRequest(['date_req' => $date->format('d/m/Y')])
             : $this->makeRequest();
 

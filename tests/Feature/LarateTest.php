@@ -9,7 +9,6 @@ use Dostrog\Larate\Facades\LarateFacade;
 use Dostrog\Larate\Larate;
 use Dostrog\Larate\Tests\TestCase;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Cache;
 
 class LarateTest extends TestCase
 {
@@ -31,16 +30,30 @@ class LarateTest extends TestCase
         self::assertEquals('null', $rate->getProviderName());
     }
 
+    public function test_get_latest_rate(): void
+    {
+        $pair = new CurrencyPair(self::BASE_CURRENCY, self::QUOTE_CURRENCY);
+
+        // instantiate from Laravel IoC for inject provider
+        $provider = app()->make('larate');
+
+        $rate = $provider->getExchangeRate($pair);
+
+        self::assertEquals($provider->getProviderName(), $rate->getProviderName());
+        self::assertIsFloat($rate->getValue());
+    }
+
     public function test_get_result_from_cache(): void
     {
         $pair = new CurrencyPair(self::BASE_CURRENCY, self::QUOTE_CURRENCY);
         $date = Carbon::parse(self::DATE);
+        $cache = app()->make('cache.store');
 
         $cacheKey = CacheHelper::buildCacheKey($pair, $date);
-        Cache::forget($cacheKey);
+        $cache->forget($cacheKey);
 
         // instantiate from Laravel IoC for inject provider
-        $provider = app()->make(Larate::class);
+        $provider = app()->make('larate');
 
         $rate = $provider->getExchangeRate($pair, Carbon::parse(self::DATE));
 
@@ -54,9 +67,10 @@ class LarateTest extends TestCase
     {
         $pair = new CurrencyPair(self::BASE_CURRENCY, self::QUOTE_CURRENCY);
         $date = Carbon::parse(self::DATE);
+        $cache = app()->make('cache.store');
 
         $cacheKey = CacheHelper::buildCacheKey($pair, $date);
-        Cache::forget($cacheKey);
+        $cache->forget($cacheKey);
 
         $rate = LarateFacade::getExchangeRate($pair, Carbon::parse(self::DATE));
 

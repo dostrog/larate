@@ -46,7 +46,7 @@ final class CurrencyPair implements CurrencyPairContract
     {
         $matches = [];
         if (! preg_match('#^([A-Z0-9]{3,})/([A-Z0-9]{3,})$#', $string, $matches)) {
-            throw new InvalidArgumentException('The currency pair must be in the form "EUR/USD".');
+            throw new InvalidArgumentException(trans('larate::error.badpair'));
         }
 
         $parts = explode('/', $string);
