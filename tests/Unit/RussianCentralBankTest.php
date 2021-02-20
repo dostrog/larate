@@ -211,7 +211,6 @@ CONTENT;
         $rcb->getExchangeRate($pair);
     }
 
-
     /** @test */
     public function rcb_get_exchange_rate_for_past(): void
     {
