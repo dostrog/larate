@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Dostrog\Larate\Tests\Unit;
 
@@ -6,9 +7,15 @@ use Dostrog\Larate\Tests\TestCase;
 use Dostrog\Larate\Validation;
 use InvalidArgumentException;
 
-class ValidationTest extends TestCase
+final class ValidationTest extends TestCase
 {
+    /**
+     * @var string
+    */
     public const BASE_CURRENCY = 'EUR';
+    /**
+     * @var string
+     */
     public const QUOTE_CURRENCY = 'USD';
 
     /** @test */

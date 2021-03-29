@@ -41,8 +41,8 @@ class NationalBankOfUkraine extends HttpService
 
         try {
             $date = Carbon::createFromFormat('!d.m.Y', (string) $item->exchangedate);
-        } catch (Throwable $th) {
-            throw new RuntimeException(trans('larate::error.badresponse', ['message' => $th->getMessage()]));
+        } catch (Throwable $throwable) {
+            throw new RuntimeException(trans('larate::error.badresponse', ['message' => $throwable->getMessage()]), $throwable->getCode(), $throwable);
         }
 
         $valueStr = (string) $item->rate;
@@ -53,7 +53,10 @@ class NationalBankOfUkraine extends HttpService
             throw new RuntimeException(trans('larate::error.badfloat', ['value' => $value]));
         }
 
-        return [$value, $date];
+        return [
+            'value' => $value,
+            'date' => $date,
+        ];
     }
 
     /**
@@ -70,7 +73,7 @@ class NationalBankOfUkraine extends HttpService
             ])
             : $this->makeRequest(['valcode' => $quoteCurrency]);
 
-        [$value, $responseDate] = $this->parseRateData($content, $quoteCurrency);
+        ['value' => $value, 'date' => $responseDate] = $this->parseRateData($content, $quoteCurrency);
 
         return new ExchangeRate($currencyPair, $value, $responseDate, $this->getName());
     }

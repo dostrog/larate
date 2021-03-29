@@ -14,8 +14,6 @@ class Validation
      * Validate that the currency is supported by the
      * Exchange Rates API.
      *
-     * @param string $currencyCode
-     *
      * @throws InvalidArgumentException
      */
     public static function validateCurrencyCode(string $currencyCode): void
@@ -25,7 +23,7 @@ class Validation
 
         $validator = Validator::make([ 'code' => $currencyCode], [
             'code' => [
-                function ($attribute, $value, $fail) use ($currencies) {
+                function ($attribute, $value, $fail) use ($currencies): void {
                     if (! $currencies->contains(new Currency($value))) {
                         $fail(trans('larate::validation.code', ['code' => $value]));
                     }

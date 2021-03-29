@@ -25,6 +25,11 @@ abstract class HttpService implements ExchangeRateService
     /**
      * @inheritDoc
      */
+    abstract public function getExchangeRate(CurrencyPair $currencyPair, DateTimeInterface $date = null): ExchangeRateContract;
+
+    /**
+     * @inheritDoc
+     */
     public function getName(): string
     {
         return $this->serviceName;
@@ -36,8 +41,8 @@ abstract class HttpService implements ExchangeRateService
             $response = (isset($params))
                 ? $this->http->get($this->url, $params)
                 : $this->http->get($this->url);
-        } catch (Throwable $th) {
-            throw new RuntimeException(trans('larate::error.request', ['provider' => $this->serviceName]));
+        } catch (Throwable $throwable) {
+            throw new RuntimeException(trans('larate::error.request', ['provider' => $this->serviceName]), $throwable->getCode(), $throwable);
         }
 
         // Laravel HTTP client does not throw exception, check for error with this
@@ -47,9 +52,4 @@ abstract class HttpService implements ExchangeRateService
 
         return $response->body();
     }
-
-    /**
-     * @inheritDoc
-     */
-    abstract public function getExchangeRate(CurrencyPair $currencyPair, DateTimeInterface $date = null): ExchangeRateContract;
 }

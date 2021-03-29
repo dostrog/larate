@@ -6,6 +6,7 @@ use Dostrog\Larate\Contracts\ExchangeRateService;
 use Dostrog\Larate\CurrencyPair;
 use Dostrog\Larate\Services\NationalBankOfUkraine;
 use Dostrog\Larate\Tests\TestCase;
+use Exception;
 use Illuminate\Http\Client\Factory;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
@@ -13,9 +14,21 @@ use RuntimeException;
 
 class NationalBankOfUkraineTest extends TestCase
 {
+    /**
+     * @var string
+     */
     public const BASE_CURRENCY = 'UAH';
+    /**
+     * @var string
+     */
     public const QUOTE_CURRENCY = 'USD';
+    /**
+     * @var string
+     */
     public const PROVIDER_NAME = 'nbu';
+    /**
+     * @var string
+     */
     public const DATE = '2020-01-16';
     public ExchangeRateService $service;
 
@@ -41,7 +54,10 @@ class NationalBankOfUkraineTest extends TestCase
 </exchange>
 CONTENT;
 
-        self::assertEquals([23.9821, Carbon::parse('16.01.2020')], $this->service->parseRateData($content, 'USD'));
+        self::assertEquals([
+            'value' => 23.9821,
+            'date' => Carbon::parse('16.01.2020'),
+        ], $this->service->parseRateData($content, 'USD'));
     }
 
     /** @test */
@@ -195,7 +211,7 @@ CONTENT;
         $httpClient = $this->mock(Factory::class);
         $httpClient->shouldReceive('get')
             ->withSomeOfArgs(['url' => NationalBankOfUkraine::URL])
-            ->andThrow(\Exception::class);
+            ->andThrow(Exception::class);
 
         $rcb = new NationalBankOfUkraine($httpClient);
         $pair = new CurrencyPair(self::BASE_CURRENCY, self::QUOTE_CURRENCY);
@@ -207,9 +223,7 @@ CONTENT;
     /** @test */
     public function nbu_get_exchange_rate_response_failed(): void
     {
-        $httpClient = Http::fake(function ($request) {
-            return Http::response([], 500);
-        });
+        $httpClient = Http::fake(fn ($request) => Http::response([], 500));
 
         $rcb = new NationalBankOfUkraine($httpClient);
         $pair = new CurrencyPair(self::BASE_CURRENCY, self::QUOTE_CURRENCY);

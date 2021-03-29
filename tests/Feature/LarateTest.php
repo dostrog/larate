@@ -12,9 +12,21 @@ use Illuminate\Support\Carbon;
 
 class LarateTest extends TestCase
 {
+    /**
+     * @var string
+     */
     public const BASE_CURRENCY = 'RUB';
+    /**
+     * @var string
+     */
     public const QUOTE_CURRENCY = 'USD';
+    /**
+     * @var string
+     */
     public const PROVIDER_NAME = 'cbrf';
+    /**
+     * @var string
+     */
     public const DATE = '2020-01-16';
 
     public function test_requesting_the_same_currency(): void
