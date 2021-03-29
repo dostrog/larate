@@ -23,8 +23,20 @@ class Larate implements ExchangeRateProviderContract
      */
     private CacheInterface $cache;
 
+    public static function createForBaseCurrency(string $baseCurrency = 'RUB', CacheInterface $cache = null): Larate
+    {
+        $serviceClass = isset(config('larate.service')[$baseCurrency]) && class_exists(config('larate.service')[$baseCurrency])
+            ? config('larate.service.' . $baseCurrency)
+            : config('larate.service.RUB');
+
+        return new self(new $serviceClass, $cache ?? app()->make('cache.store'));
+    }
+
     /**
      * Constructor.
+     *
+     * @param ExchangeRateServiceContract $service
+     * @param CacheInterface $cache
      */
     public function __construct(ExchangeRateServiceContract $service, CacheInterface $cache)
     {
@@ -57,14 +69,5 @@ class Larate implements ExchangeRateProviderContract
         $this->cache->set($cacheKey, $rate->getValue());
 
         return $rate;
-    }
-
-    public static function createForBaseCurrency(string $baseCurrency = 'RUB', CacheInterface $cache = null): Larate
-    {
-        $serviceClass = isset(config('larate.service')[$baseCurrency]) && class_exists(config('larate.service')[$baseCurrency])
-            ? config('larate.service.' . $baseCurrency)
-            : config('larate.service.RUB');
-
-        return new self(new $serviceClass, $cache ?? app()->make('cache.store'));
     }
 }
