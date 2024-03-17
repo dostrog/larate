@@ -25,6 +25,7 @@
         "thecodingmachine/safe": "^2.5.0"
     },
     "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.51",
         "orchestra/testbench": "^9.0.0",
         "phpunit/phpunit": "^11.0.6",
         "rector/rector": "^1.0.3",
@@ -41,6 +42,8 @@
         }
     },
     "scripts": {
+        "fix-style": "vendor/bin/php-cs-fixer fix --allow-risky=yes",
+        "check-style": "vendor/bin/php-cs-fixer fix --allow-risky=yes --dry-run",
         "test": "vendor/bin/phpunit --no-coverage --colors=always",
         "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
     },
