@@ -9,7 +9,6 @@ use Dostrog\Larate\Contracts\ExchangeRate as ExchangeRateContract;
 use Dostrog\Larate\Contracts\ExchangeRateService;
 use Dostrog\Larate\Exceptions\HttpServiceException;
 use Illuminate\Http\Client\Factory;
-use RuntimeException;
 use Throwable;
 
 abstract class HttpService implements ExchangeRateService

@@ -132,21 +132,21 @@ CONTENT;
         self::assertEquals($expected, $this->service->getExchangeRate($pair, Carbon::parse($date))->getValue());
     }
 
-//    #[Test]
-//    public function nbu_get_latest_exchange_rate(): void
-//    {
-//        if (Carbon::now()->hour <= 12) {
-//            return;
-//        }
-//
-//        $rcb = new NationalBankOfUkraine();
-//        $pair = new CurrencyPair(self::BASE_CURRENCY, self::QUOTE_CURRENCY);
-//
-//        $v1 = $rcb->getExchangeRate($pair, Carbon::now()->addDay())->getValue();
-//        $v2 = $rcb->getExchangeRate($pair)->getValue();
-//
-//        self::assertEquals($v1, $v2);
-//    }
+    //    #[Test]
+    //    public function nbu_get_latest_exchange_rate(): void
+    //    {
+    //        if (Carbon::now()->hour <= 12) {
+    //            return;
+    //        }
+    //
+    //        $rcb = new NationalBankOfUkraine();
+    //        $pair = new CurrencyPair(self::BASE_CURRENCY, self::QUOTE_CURRENCY);
+    //
+    //        $v1 = $rcb->getExchangeRate($pair, Carbon::now()->addDay())->getValue();
+    //        $v2 = $rcb->getExchangeRate($pair)->getValue();
+    //
+    //        self::assertEquals($v1, $v2);
+    //    }
 
     #[Test]
     public function nbu_get_exchange_rate_for_no_currency_on_period(): void
