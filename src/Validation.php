@@ -18,13 +18,16 @@ class Validation
      */
     public static function validateCurrencyCode(string $currencyCode): void
     {
-        $currencies = new ISOCurrencies();
-        $currencies->contains(new Currency($currencyCode));
+        if ($currencyCode === "") {
+            throw new InvalidArgumentException(trans('larate::validation.code', ['code' => $currencyCode]));
+        }
 
-        $validator = Validator::make([ 'code' => $currencyCode], [
+        $currencies = new ISOCurrencies();
+
+        $validator = Validator::make(['code' => $currencyCode], [
             'code' => [
                 function ($attribute, $value, $fail) use ($currencies): void {
-                    if (! $currencies->contains(new Currency($value))) {
+                    if ($currencies->contains(new Currency($value)) === false) {
                         $fail(trans('larate::validation.code', ['code' => $value]));
                     }
                 },

@@ -4,12 +4,14 @@ namespace Dostrog\Larate\Tests\Unit;
 
 use Dostrog\Larate\Contracts\ExchangeRateService;
 use Dostrog\Larate\CurrencyPair;
+use Dostrog\Larate\Exceptions\HttpServiceException;
 use Dostrog\Larate\Services\RussianCentralBank;
 use Dostrog\Larate\Tests\TestCase;
 use Exception;
 use Illuminate\Http\Client\Factory;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
+use PHPUnit\Framework\Attributes\Test;
 use RuntimeException;
 
 class RussianCentralBankTest extends TestCase
@@ -38,7 +40,7 @@ class RussianCentralBankTest extends TestCase
         $this->service = new RussianCentralBank();
     }
 
-    /** @test */
+    #[Test]
     public function rcb_parse_rate_data(): void
     {
         $content = <<<CONTENT
@@ -59,7 +61,7 @@ CONTENT;
         ], $this->service->parseRateData($content, 'EEK'));
     }
 
-    /** @test */
+    #[Test]
     public function rcb_parse_rate_data_no_value(): void
     {
         $content = <<<CONTENT
@@ -79,7 +81,7 @@ CONTENT;
         $this->service->parseRateData($content, 'EEK');
     }
 
-    /** @test */
+    #[Test]
     public function rcb_parse_rate_data_invalid_date(): void
     {
         $content = <<<CONTENT
@@ -99,7 +101,7 @@ CONTENT;
         $this->service->parseRateData($content, 'EEK');
     }
 
-    /** @test */
+    #[Test]
     public function rcb_parse_rate_data_wo_date(): void
     {
         $content = <<<CONTENT
@@ -119,7 +121,7 @@ CONTENT;
         $this->service->parseRateData($content, 'EEK');
     }
 
-    /** @test */
+    #[Test]
     public function rcb_get_exchange_rate_for_non_holiday(): void
     {
         $date = '2020-01-16';
@@ -127,10 +129,14 @@ CONTENT;
 
         $pair = new CurrencyPair(self::BASE_CURRENCY, self::QUOTE_CURRENCY);
 
-        self::assertEquals($expected, $this->service->getExchangeRate($pair, Carbon::parse($date))->getValue());
+        try {
+            self::assertEquals($expected, $this->service->getExchangeRate($pair, Carbon::parse($date))->getValue());
+        } catch (HttpServiceException $e) {
+            $this->markTestIncomplete("External API error: " . $e->getMessage());
+        }
     }
 
-    /** @test */
+    #[Test]
     public function rcb_get_exchange_rate_for_no_currency_on_period(): void
     {
         $date = '1996-01-16';
@@ -138,11 +144,11 @@ CONTENT;
 
         $pair = new CurrencyPair(self::BASE_CURRENCY, $quoteCurrency);
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(HttpServiceException::class);
         $this->service->getExchangeRate($pair, Carbon::parse($date));
     }
 
-    /** @test */
+    #[Test]
     public function rcb_get_exchange_rate_for_holiday(): void
     {
         $date0 = '2020-01-01';
@@ -151,32 +157,41 @@ CONTENT;
 
         $pair = new CurrencyPair(self::BASE_CURRENCY, self::QUOTE_CURRENCY);
 
-        $rate0 = $this->service->getExchangeRate($pair, Carbon::parse($date0))->getValue();
-        $rate1 = $this->service->getExchangeRate($pair, Carbon::parse($date1))->getValue();
+        try {
+            $rate0 = $this->service->getExchangeRate($pair, Carbon::parse($date0))->getValue();
+            $rate1 = $this->service->getExchangeRate($pair, Carbon::parse($date1))->getValue();
+        } catch (HttpServiceException $e) {
+            $this->markTestIncomplete("External API error: " . $e->getMessage());
+        }
 
         self::assertEquals($expected, $rate0);
         self::assertSame($rate0, $rate1);
     }
 
-    /** @test */
+    #[Test]
     public function rcb_get_exchange_rate_for_future(): void
     {
         $pair = new CurrencyPair(self::BASE_CURRENCY, self::QUOTE_CURRENCY);
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(HttpServiceException::class);
         $this->service->getExchangeRate($pair, Carbon::now()->addYear());
     }
 
-    /** @test */
+    #[Test]
     public function rcb_get_latest_exchange_rate(): void
     {
         $pair = new CurrencyPair(self::BASE_CURRENCY, self::QUOTE_CURRENCY);
-        $rate = $this->service->getExchangeRate($pair);
+
+        try {
+            $rate = $this->service->getExchangeRate($pair);
+        } catch (HttpServiceException $e) {
+            $this->markTestIncomplete("External API error: " . $e->getMessage());
+        }
 
         self::assertIsFloat($rate->getValue());
     }
 
-    /** @test */
+    #[Test]
     public function rcb_get_exchange_rate_response_throw_exception(): void
     {
         $httpClient = $this->mock(Factory::class);
@@ -188,13 +203,11 @@ CONTENT;
         $rcb = new RussianCentralBank($httpClient);
         $pair = new CurrencyPair(self::BASE_CURRENCY, self::QUOTE_CURRENCY);
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(HttpServiceException::class);
         $rcb->getExchangeRate($pair);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function rcb_get_exchange_rate_response_failed(): void
     {
         $httpClient = Http::fake(fn ($request) => Http::response([], 500));
@@ -202,20 +215,20 @@ CONTENT;
         $rcb = new RussianCentralBank($httpClient);
         $pair = new CurrencyPair(self::BASE_CURRENCY, self::QUOTE_CURRENCY);
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(HttpServiceException::class);
         $rcb->getExchangeRate($pair);
     }
 
-    /** @test */
+    #[Test]
     public function rcb_get_exchange_rate_for_past(): void
     {
         $pair = new CurrencyPair(self::BASE_CURRENCY, self::QUOTE_CURRENCY);
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(HttpServiceException::class);
         $this->service->getExchangeRate($pair, Carbon::now()->subYears(50));
     }
 
-    /** @test */
+    #[Test]
     public function rcb_get_name(): void
     {
         self::assertSame(self::PROVIDER_NAME, $this->service->getName());

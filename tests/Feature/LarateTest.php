@@ -5,9 +5,11 @@ namespace Dostrog\Larate\Tests\Feature;
 
 use Dostrog\Larate\CacheHelper;
 use Dostrog\Larate\CurrencyPair;
+use Dostrog\Larate\Exceptions\HttpServiceException;
 use Dostrog\Larate\Facades\LarateFacade;
 use Dostrog\Larate\Larate;
 use Dostrog\Larate\Tests\TestCase;
+use Exception;
 use Illuminate\Support\Carbon;
 
 class LarateTest extends TestCase
@@ -49,7 +51,11 @@ class LarateTest extends TestCase
         // instantiate from Laravel IoC for inject provider
         $provider = app()->make('larate');
 
-        $rate = $provider->getExchangeRate($pair);
+        try {
+            $rate = $provider->getExchangeRate($pair);
+        } catch (HttpServiceException $e) {
+            $this->markTestIncomplete("External API error: " . $e->getMessage());
+        }
 
         self::assertEquals($provider->getProviderName(), $rate->getProviderName());
         self::assertIsFloat($rate->getValue());
@@ -67,7 +73,11 @@ class LarateTest extends TestCase
         // instantiate from Laravel IoC for inject provider
         $provider = app()->make('larate');
 
-        $rate = $provider->getExchangeRate($pair, Carbon::parse(self::DATE));
+        try {
+            $rate = $provider->getExchangeRate($pair, Carbon::parse(self::DATE));
+        } catch (Exception $e) {
+            $this->markTestIncomplete("External API error: " . $e->getMessage());
+        }
 
         self::assertEquals($provider->getProviderName(), $rate->getProviderName());
 
@@ -84,7 +94,11 @@ class LarateTest extends TestCase
         $cacheKey = CacheHelper::buildCacheKey($pair, $date);
         $cache->forget($cacheKey);
 
-        $rate = LarateFacade::getExchangeRate($pair, Carbon::parse(self::DATE));
+        try {
+            $rate = LarateFacade::getExchangeRate($pair, Carbon::parse(self::DATE));
+        } catch (Exception $e) {
+            $this->markTestIncomplete("External API error: " . $e->getMessage());
+        }
 
         self::assertEquals(LarateFacade::getProviderName(), $rate->getProviderName());
 
