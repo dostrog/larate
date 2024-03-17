@@ -1,5 +1,5 @@
 /node_modules
-/vendor
+/vendor/
 /build
 
 /public/hot
@@ -27,4 +27,5 @@ yarn-error.log
 
 TODO.md
 .php_cs.cache
+.php-cs-fixer.cach
 rector.php
