@@ -1,7 +1,7 @@
 # Larate
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/dostrog/larate)](https://packagist.org/packages/dostrog/larate)
-[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/dostrog/larate/Check%20&%20fix%20styling?label=code%20style)](https://github.com/dostrog/larate/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amaster)
+[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/dostrog/larate/Check%20&%20fix%20styling?label=code%20style)](https://img.shields.io/github/actions/workflow/status/dostrog/larate/test.yml?branch=master)
 [![Total Downloads](https://img.shields.io/packagist/dt/dostrog/larate)](https://packagist.org/packages/dostrog/larate)
 
 ## Overview
