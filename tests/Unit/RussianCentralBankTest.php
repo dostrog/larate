@@ -144,7 +144,7 @@ CONTENT;
 
         $pair = new CurrencyPair(self::BASE_CURRENCY, $quoteCurrency);
 
-        $this->expectException(HttpServiceException::class);
+        $this->expectException(RuntimeException::class);
         $this->service->getExchangeRate($pair, Carbon::parse($date));
     }
 
@@ -173,7 +173,7 @@ CONTENT;
     {
         $pair = new CurrencyPair(self::BASE_CURRENCY, self::QUOTE_CURRENCY);
 
-        $this->expectException(HttpServiceException::class);
+        $this->expectException(RuntimeException::class);
         $this->service->getExchangeRate($pair, Carbon::now()->addYear());
     }
 
@@ -224,7 +224,7 @@ CONTENT;
     {
         $pair = new CurrencyPair(self::BASE_CURRENCY, self::QUOTE_CURRENCY);
 
-        $this->expectException(HttpServiceException::class);
+        $this->expectException(RuntimeException::class);
         $this->service->getExchangeRate($pair, Carbon::now()->subYears(50));
     }
 
