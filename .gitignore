@@ -16,6 +16,7 @@
 phpunit.xml
 psalm.xml
 .phpunit.result.cache
+.phpunit.cache/
 composer.lock
 npm-debug.log
 yarn-error.log
