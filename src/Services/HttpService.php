@@ -7,8 +7,8 @@ use DateTimeInterface;
 use Dostrog\Larate\Contracts\CurrencyPair;
 use Dostrog\Larate\Contracts\ExchangeRate as ExchangeRateContract;
 use Dostrog\Larate\Contracts\ExchangeRateService;
+use Dostrog\Larate\Exceptions\HttpServiceException;
 use Illuminate\Http\Client\Factory;
-use RuntimeException;
 use Throwable;
 
 abstract class HttpService implements ExchangeRateService
@@ -42,12 +42,12 @@ abstract class HttpService implements ExchangeRateService
                 ? $this->http->get($this->url, $params)
                 : $this->http->get($this->url);
         } catch (Throwable $throwable) {
-            throw new RuntimeException(trans('larate::error.request', ['provider' => $this->serviceName]), $throwable->getCode(), $throwable);
+            throw new HttpServiceException(trans('larate::error.request', ['provider' => $this->serviceName]), $throwable->getCode(), $throwable);
         }
 
         // Laravel HTTP client does not throw exception, check for error with this
         if ($response->failed()) {
-            throw new RuntimeException(trans('larate::error.request', ['provider' => $this->serviceName]));
+            throw new HttpServiceException(trans('larate::error.request', ['provider' => $this->serviceName]));
         }
 
         return $response->body();

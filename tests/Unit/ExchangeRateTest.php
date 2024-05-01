@@ -7,6 +7,7 @@ use Dostrog\Larate\CurrencyPair;
 use Dostrog\Larate\ExchangeRate;
 use Dostrog\Larate\Tests\TestCase;
 use Illuminate\Support\Carbon;
+use PHPUnit\Framework\Attributes\Test;
 
 class ExchangeRateTest extends TestCase
 {
@@ -27,7 +28,7 @@ class ExchangeRateTest extends TestCase
      */
     public const DATE = '2020-01-16';
 
-    /** @test */
+    #[Test]
     public function exchange_rate_constructor_access_carbon(): void
     {
         $er = new ExchangeRate(
@@ -42,7 +43,7 @@ class ExchangeRateTest extends TestCase
         self::assertEquals(self::DATE, $er->getDate()->format('Y-m-d'));
     }
 
-    /** @test */
+    #[Test]
     public function exchange_rate_constructor_access_right_value(): void
     {
         $er = new ExchangeRate(

@@ -7,6 +7,7 @@ use Dostrog\Larate\Larate;
 use Dostrog\Larate\Tests\TestCase;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
+use PHPUnit\Framework\Attributes\Test;
 use Safe\Exceptions\FilesystemException;
 
 class InstallLarateTest extends TestCase
@@ -29,7 +30,7 @@ class InstallLarateTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function the_install_command_copies_the_configuration(): void
     {
         self::assertFalse(File::exists(config_path(self::CONFIG_NAME)));
@@ -39,13 +40,13 @@ class InstallLarateTest extends TestCase
         self::assertTrue(File::exists(config_path(self::CONFIG_NAME)));
     }
 
-    /** @test */
+    #[Test]
     public function the_class_registered_in_app_container(): void
     {
         self::assertInstanceOf(Larate::class, app('larate'));
     }
 
-    /** @test */
+    #[Test]
     public function the_facade_is_aliased(): void
     {
         self::assertTrue(class_exists(LarateFacade::class));

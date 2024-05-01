@@ -10,6 +10,7 @@ use Exception;
 use Illuminate\Http\Client\Factory;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
+use PHPUnit\Framework\Attributes\Test;
 use RuntimeException;
 
 class NationalBankOfUkraineTest extends TestCase
@@ -38,7 +39,7 @@ class NationalBankOfUkraineTest extends TestCase
         $this->service = new NationalBankOfUkraine();
     }
 
-    /** @test */
+    #[Test]
     public function nbu_parse_rate_data(): void
     {
         $content = <<<CONTENT
@@ -60,7 +61,7 @@ CONTENT;
         ], $this->service->parseRateData($content, 'USD'));
     }
 
-    /** @test */
+    #[Test]
     public function rcb_parse_rate_data_no_value(): void
     {
         $content = <<<CONTENT
@@ -80,7 +81,7 @@ CONTENT;
         $this->service->parseRateData($content, 'USD');
     }
 
-    /** @test */
+    #[Test]
     public function rcb_parse_rate_data_invalid_date(): void
     {
         $content = <<<CONTENT
@@ -100,7 +101,7 @@ CONTENT;
         $this->service->parseRateData($content, 'USD');
     }
 
-    /** @test */
+    #[Test]
     public function nbu_parse_rate_data_wo_date(): void
     {
         $content = <<<CONTENT
@@ -120,7 +121,7 @@ CONTENT;
         $this->service->parseRateData($content, 'USD');
     }
 
-    /** @test */
+    #[Test]
     public function nbu_get_exchange_rate_for_non_holiday(): void
     {
         $date = '2020-01-16';
@@ -131,26 +132,23 @@ CONTENT;
         self::assertEquals($expected, $this->service->getExchangeRate($pair, Carbon::parse($date))->getValue());
     }
 
-    /**
-     * @test
-     *
-     */
-//    public function nbu_get_latest_exchange_rate(): void
-//    {
-//        if (Carbon::now()->hour <= 12) {
-//            return;
-//        }
-//
-//        $rcb = new NationalBankOfUkraine();
-//        $pair = new CurrencyPair(self::BASE_CURRENCY, self::QUOTE_CURRENCY);
-//
-//        $v1 = $rcb->getExchangeRate($pair, Carbon::now()->addDay())->getValue();
-//        $v2 = $rcb->getExchangeRate($pair)->getValue();
-//
-//        self::assertEquals($v1, $v2);
-//    }
+    //    #[Test]
+    //    public function nbu_get_latest_exchange_rate(): void
+    //    {
+    //        if (Carbon::now()->hour <= 12) {
+    //            return;
+    //        }
+    //
+    //        $rcb = new NationalBankOfUkraine();
+    //        $pair = new CurrencyPair(self::BASE_CURRENCY, self::QUOTE_CURRENCY);
+    //
+    //        $v1 = $rcb->getExchangeRate($pair, Carbon::now()->addDay())->getValue();
+    //        $v2 = $rcb->getExchangeRate($pair)->getValue();
+    //
+    //        self::assertEquals($v1, $v2);
+    //    }
 
-    /** @test */
+    #[Test]
     public function nbu_get_exchange_rate_for_no_currency_on_period(): void
     {
         $date = '1969-01-16';
@@ -162,7 +160,7 @@ CONTENT;
         $this->service->getExchangeRate($pair, Carbon::parse($date));
     }
 
-    /** @test */
+    #[Test]
     public function nbu_get_exchange_rate_for_holiday(): void
     {
         $date0 = '2020-01-01';
@@ -178,7 +176,7 @@ CONTENT;
         self::assertEquals($rate0, $rate1);
     }
 
-    /** @test */
+    #[Test]
     public function nbu_get_exchange_rate_for_future(): void
     {
         $pair = new CurrencyPair(self::BASE_CURRENCY, self::QUOTE_CURRENCY);
@@ -187,7 +185,7 @@ CONTENT;
         $this->service->getExchangeRate($pair, Carbon::now()->addYear());
     }
 
-    /** @test */
+    #[Test]
     public function nbu_get_exchange_rate_for_past(): void
     {
         $pair = new CurrencyPair(self::BASE_CURRENCY, self::QUOTE_CURRENCY);
@@ -196,7 +194,7 @@ CONTENT;
         $this->service->getExchangeRate($pair, Carbon::now()->subYears(50));
     }
 
-    /** @test */
+    #[Test]
     public function rcb_get_latest_exchange_rate(): void
     {
         $pair = new CurrencyPair(self::BASE_CURRENCY, self::QUOTE_CURRENCY);
@@ -205,7 +203,7 @@ CONTENT;
         self::assertIsFloat($rate->getValue());
     }
 
-    /** @test */
+    #[Test]
     public function rcb_get_exchange_rate_response_throw_exception(): void
     {
         $httpClient = $this->mock(Factory::class);
@@ -220,7 +218,7 @@ CONTENT;
         $rcb->getExchangeRate($pair);
     }
 
-    /** @test */
+    #[Test]
     public function nbu_get_exchange_rate_response_failed(): void
     {
         $httpClient = Http::fake(fn ($request) => Http::response([], 500));
@@ -232,7 +230,7 @@ CONTENT;
         $rcb->getExchangeRate($pair);
     }
 
-    /** @test */
+    #[Test]
     public function nbu_get_name(): void
     {
         self::assertEquals(self::PROVIDER_NAME, $this->service->getName());
