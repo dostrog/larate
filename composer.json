@@ -3,8 +3,14 @@
     "description": "Small library to access to currency exchange rates API of CBRF (Bank of Russia) and NBU (National Bank of Ukraine) from Laravel",
     "type": "library",
     "keywords": [
-        "dostrog", "larate", "api", "laravel",
-        "currency", "rates", "rub", "uah"
+        "dostrog",
+        "larate",
+        "api",
+        "laravel",
+        "currency",
+        "rates",
+        "rub",
+        "uah"
     ],
     "homepage": "https://github.com/dostrog/larate",
     "license": "MIT",
@@ -16,19 +22,20 @@
         }
     ],
     "require": {
-        "php": "^8",
+        "php": "^8.4",
         "ext-intl": "*",
+        "ext-bcmath": "*",
         "ext-libxml": "*",
         "ext-simplexml": "*",
         "guzzlehttp/guzzle": "^7.8.1",
-        "moneyphp/money": "^4.5.0",
-        "thecodingmachine/safe": "^2.5.0"
+        "moneyphp/money": "^v4.7.1",
+        "thecodingmachine/safe": "^v3.3.0"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.51",
-        "orchestra/testbench": "^9.0.0",
-        "phpunit/phpunit": "^11.0.6",
-        "rector/rector": "^1.0.3",
+        "friendsofphp/php-cs-fixer": "^v3.75.0",
+        "orchestra/testbench": "^v10.3.0",
+        "phpunit/phpunit": "^v12.2.1",
+        "rector/rector": "^v2.0.17",
         "roave/security-advisories": "dev-master"
     },
     "autoload": {
@@ -38,14 +45,32 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Dostrog\\Larate\\Tests\\": "tests"
+            "Dostrog\\Larate\\Tests\\": "tests",
+            "Workbench\\App\\": "workbench/app/",
+            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
+            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
         }
     },
     "scripts": {
         "fix-style": "vendor/bin/php-cs-fixer fix --allow-risky=yes",
         "check-style": "vendor/bin/php-cs-fixer fix --allow-risky=yes --dry-run",
         "test": "vendor/bin/phpunit --no-coverage --colors=always",
-        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage",
+        "post-autoload-dump": [
+            "@clear",
+            "@prepare"
+        ],
+        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+        "prepare": "@php vendor/bin/testbench package:discover --ansi",
+        "build": "@php vendor/bin/testbench workbench:build --ansi",
+        "serve": [
+            "Composer\\Config::disableProcessTimeout",
+            "@build",
+            "@php vendor/bin/testbench serve --ansi"
+        ],
+        "lint": [
+            "@php vendor/bin/phpstan analyse --verbose --ansi"
+        ]
     },
     "support": {
         "issues": "https://github.com/dostrog/larate/issues",
