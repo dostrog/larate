@@ -21,7 +21,6 @@ coverage.xml
 !.env.example
 
 # Testing
-phpunit.xml
 .phpunit.cache
 .phpunit.result.cache
 

@@ -23,8 +23,8 @@
     ],
     "require": {
         "php": "^8.4",
-        "ext-intl": "*",
         "ext-bcmath": "*",
+        "ext-intl": "*",
         "ext-libxml": "*",
         "ext-simplexml": "*",
         "guzzlehttp/guzzle": "^7.8.1",
