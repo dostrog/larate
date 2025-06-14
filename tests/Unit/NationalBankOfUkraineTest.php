@@ -78,6 +78,7 @@ CONTENT;
 CONTENT;
 
         $this->expectException(RuntimeException::class);
+        $a = $this->service->parseRateData($content, 'USD');
     }
 
     #[Test]
