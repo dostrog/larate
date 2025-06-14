@@ -5,6 +5,7 @@
 # Build files
 /build
 /coverage
+coverage.xml
 
 # Public assets
 /public/hot
