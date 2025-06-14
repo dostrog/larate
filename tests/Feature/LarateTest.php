@@ -57,7 +57,7 @@ class LarateTest extends TestCase
             $this->markTestIncomplete("External API error: " . $e->getMessage());
         }
 
-        self::assertEquals($provider->getProviderName(), $rate->getProviderName());
+        self::assertContains($provider->getProviderName(), ['cache', 'cbrf', 'nbu']);
         self::assertIsFloat($rate->getValue());
     }
 

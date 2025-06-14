@@ -30,7 +30,7 @@ class CacheTest extends TestCase
 
     public function test_cache_helper_build_cache_key(): void
     {
-        $expectedKey = \Safe\sprintf(
+        $expectedKey = sprintf(
             "%s_%s-%s_%s",
             CacheHelper::CACHE_PREFIX,
             self::BASE_CURRENCY,

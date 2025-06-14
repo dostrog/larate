@@ -78,7 +78,10 @@ CONTENT;
 CONTENT;
 
         $this->expectException(RuntimeException::class);
-        $this->service->parseRateData($content, 'USD');
+        $a = $this->service->parseRateData($content, 'USD');
+
+        var_dump($a);
+
     }
 
     #[Test]
