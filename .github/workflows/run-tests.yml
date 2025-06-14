@@ -14,7 +14,6 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
         php: [8.4]
-        laravel: [12.*]
         stability: [prefer-lowest, prefer-stable]
         include:
           - laravel: 12.*
@@ -26,12 +25,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup PHP
+      - name: Setup PHP with Xdebug coverage
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, intl, exif, iconv, fileinfo
-          coverage: none
+          coverage: xdebug
 
       - name: Install composer dependencies
         run: composer install --prefer-dist --no-scripts -q -o
