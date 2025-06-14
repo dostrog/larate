@@ -43,6 +43,10 @@ jobs:
           composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
+      - name: Prepare orchestra/workbench
+        run: |
+          vendor/bin/testbench workbench:install
+
       - name: Execute tests
         run: vendor/bin/phpunit tests --coverage-clover=coverage.xml
 
