@@ -1,7 +1,12 @@
+# Dependencies
 /node_modules
-/vendor/
-/build
+/vendor
 
+# Build files
+/build
+/coverage
+
+# Public assets
 /public/hot
 /public/storage
 /public/css
@@ -9,24 +14,35 @@
 /public/img
 /public/vendor
 
+# Environment and configuration
 /storage/*.key
-.env
-.env.production
+.env*
+!.env.example
 
+# Testing
 phpunit.xml
-.phpunit.cache/
-psalm.xml
+.phpunit.cache
 .phpunit.result.cache
-.phpunit.cache/
-composer.lock
-npm-debug.log
-yarn-error.log
 
+# IDE and editor files
 /.phpstorm.meta.php
 /_ide_helper*
 /doc
+.idea
+.vscode
 
-TODO.md
+# Logs and debug
+npm-debug.log
+yarn-error.log
+
+# Composer
+composer.lock
+
+# PHP CS
 .php_cs.cache
 .php-cs-fixer.cache
+
+# Local development
+/workbench
+TODO.md
 rector.php
