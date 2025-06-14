@@ -59,7 +59,8 @@ class NationalBankOfUkraine extends HttpService
         ];
     }
 
-    private function parseLocaleFloat($string, $locale = 'uk_UA') {
+    private function parseLocaleFloat($string, $locale = 'uk_UA')
+    {
         // Remove any thousands separators first
         $string = \Safe\preg_replace('/[\s\xa0]/', '', $string); // Remove spaces and non-breaking spaces
 

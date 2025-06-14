@@ -22,7 +22,7 @@ final readonly class ExchangeRate implements ExchangeRateContract
         private float                $value,
         private DateTimeInterface    $date,
         private string               $providerName
-    ){
+    ) {
     }
 
     /**

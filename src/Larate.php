@@ -20,7 +20,7 @@ readonly class Larate implements ExchangeRateProviderContract
     public function __construct(
         private ExchangeRateServiceContract $service,
         private CacheInterface              $cache
-    ){
+    ) {
     }
 
     /**
