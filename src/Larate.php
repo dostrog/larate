@@ -8,22 +8,25 @@ use Dostrog\Larate\Contracts\CurrencyPair as CurrencyPairContract;
 use Dostrog\Larate\Contracts\ExchangeRate as ExchangeRateContract;
 use Dostrog\Larate\Contracts\ExchangeRateProvider as ExchangeRateProviderContract;
 use Dostrog\Larate\Contracts\ExchangeRateService as ExchangeRateServiceContract;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Carbon;
 use Psr\SimpleCache\CacheInterface;
+use Psr\SimpleCache\InvalidArgumentException;
+use Safe\Exceptions\PcreException;
 
-class Larate implements ExchangeRateProviderContract
+readonly class Larate implements ExchangeRateProviderContract
 {
-    /**
-     * The service where converted rate are
-     */
-    private ExchangeRateServiceContract $service;
+
+    public function __construct(
+        private ExchangeRateServiceContract $service,
+        private CacheInterface              $cache
+    ){
+    }
 
     /**
-     * The cache
+     * @throws BindingResolutionException
      */
-    private CacheInterface $cache;
-
-    public static function createForBaseCurrency(string $baseCurrency = 'RUB', CacheInterface $cache = null): Larate
+    public static function createForBaseCurrency(string $baseCurrency = 'RUB', ?CacheInterface $cache = null): Larate
     {
         $serviceClass = isset(config('larate.service')[$baseCurrency]) && class_exists(config('larate.service')[$baseCurrency])
             ? config('larate.service.' . $baseCurrency)
@@ -32,24 +35,16 @@ class Larate implements ExchangeRateProviderContract
         return new self(new $serviceClass, $cache ?? app()->make('cache.store'));
     }
 
-    /**
-     * Constructor.
-     *
-     * @param ExchangeRateServiceContract $service
-     * @param CacheInterface $cache
-     */
-    public function __construct(ExchangeRateServiceContract $service, CacheInterface $cache)
-    {
-        $this->service = $service;
-        $this->cache = $cache;
-    }
-
     public function getProviderName(): string
     {
         return $this->service->getName();
     }
 
-    public function getExchangeRate(CurrencyPairContract $currencyPair, DateTimeInterface $date = null): ExchangeRateContract
+    /**
+     * @throws PcreException
+     * @throws InvalidArgumentException
+     */
+    public function getExchangeRate(CurrencyPairContract $currencyPair, ?DateTimeInterface $date = null): ExchangeRateContract
     {
         $dateRate = $date ?? Carbon::now();
 

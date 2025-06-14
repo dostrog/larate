@@ -16,10 +16,10 @@ use Throwable;
 
 class RussianCentralBank extends HttpService
 {
-    public const URL = 'https://www.cbr.ru/scripts/XML_daily.asp';
-    public const NAME = 'cbrf';
+    public const string URL = 'https://www.cbr.ru/scripts/XML_daily.asp';
+    public const string NAME = 'cbrf';
 
-    public function __construct(Factory $http = null)
+    public function __construct(?Factory $http = null)
     {
         parent::__construct($http);
 
@@ -51,11 +51,11 @@ class RussianCentralBank extends HttpService
         }
 
         $valueStr = (string) $quoteCurrencyData['0']->Value;
-        $fmt = NumberFormatter::create('ru_RU', NumberFormatter::DECIMAL);
+        $fmt = NumberFormatter::create('ru_RU', NumberFormatter::PATTERN_DECIMAL);
         $value = $fmt->parse($valueStr);
 
         if ($value === false) {
-            throw new RuntimeException(trans('larate::error.badfloat', ['value' => $value]));
+            throw new RuntimeException(trans('larate::error.badfloat', ['value' => 'false']));
         }
 
         $nominalStr = (string) $quoteCurrencyData['0']->Nominal;
@@ -71,11 +71,11 @@ class RussianCentralBank extends HttpService
     /**
      * @inheritDoc
      */
-    public function getExchangeRate(CurrencyPairContract $currencyPair, DateTimeInterface $date = null): ExchangeRateContract
+    public function getExchangeRate(CurrencyPairContract $currencyPair, ?DateTimeInterface $date = null): ExchangeRateContract
     {
         $quoteCurrency = $currencyPair->getQuoteCurrency();
 
-        $content = ($date !== null)
+        $content = ($date instanceof DateTimeInterface)
             ? $this->makeRequest(['date_req' => $date->format('d/m/Y')])
             : $this->makeRequest();
 

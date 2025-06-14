@@ -7,28 +7,8 @@ use DateTimeInterface;
 use Dostrog\Larate\Contracts\CurrencyPair as CurrencyPairContract;
 use Dostrog\Larate\Contracts\ExchangeRate as ExchangeRateContract;
 
-final class ExchangeRate implements ExchangeRateContract
+final readonly class ExchangeRate implements ExchangeRateContract
 {
-    /**
-     * The currency pair.
-     */
-    private CurrencyPairContract $currencyPair;
-
-    /**
-     * The value.
-     */
-    private float $value;
-
-    /**
-     * The date.
-     */
-    private DateTimeInterface $date;
-
-    /**
-     * The provider.
-     */
-    private string $providerName;
-
     /**
      * Creates a new rate.
      *
@@ -37,12 +17,12 @@ final class ExchangeRate implements ExchangeRateContract
      * @param DateTimeInterface    $date         The date at which this rate was calculated
      * @param string               $providerName The class name of the provider that returned this rate
      */
-    public function __construct(CurrencyPairContract $currencyPair, float $value, DateTimeInterface $date, string $providerName)
-    {
-        $this->currencyPair = $currencyPair;
-        $this->value = $value;
-        $this->date = $date;
-        $this->providerName = $providerName;
+    public function __construct(
+        private CurrencyPairContract $currencyPair,
+        private float                $value,
+        private DateTimeInterface    $date,
+        private string               $providerName
+    ){
     }
 
     /**

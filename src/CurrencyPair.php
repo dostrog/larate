@@ -6,41 +6,25 @@ namespace Dostrog\Larate;
 use Dostrog\Larate\Contracts\CurrencyPair as CurrencyPairContract;
 use InvalidArgumentException;
 use Safe\Exceptions\PcreException;
-use Safe\Exceptions\StringsException;
+use Stringable;
 
-final class CurrencyPair implements CurrencyPairContract
+final readonly class CurrencyPair implements CurrencyPairContract, Stringable
 {
-    /**
-     * The base currency.
-     */
-    private string $baseCurrency;
-
-    /**
-     * The quote currency.
-     */
-    private string $quoteCurrency;
-
     /**
      * Creates a new currency pair.
      *
      * @param string $baseCurrency  The base currency ISO 4217 code
      * @param string $quoteCurrency The quote currency ISO 4217 code
      */
-    public function __construct(string $baseCurrency, string $quoteCurrency)
+    public function __construct(private string $baseCurrency, private string $quoteCurrency)
     {
         Validation::validateCurrencyCode($baseCurrency);
         Validation::validateCurrencyCode($quoteCurrency);
-
-        $this->baseCurrency = $baseCurrency;
-        $this->quoteCurrency = $quoteCurrency;
     }
 
-    /**
-     * @throws StringsException
-     */
     public function __toString(): string
     {
-        return \Safe\sprintf('%s/%s', $this->baseCurrency, $this->quoteCurrency);
+        return sprintf('%s/%s', $this->baseCurrency, $this->quoteCurrency);
     }
 
     /**

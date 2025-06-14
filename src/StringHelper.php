@@ -11,9 +11,6 @@ final class StringHelper
 {
     /**
      * Transforms an XML string to an element.
-     *
-     * @param string $string
-     * @return SimpleXMLElement
      */
     public static function xmlToElement(string $string): SimpleXMLElement
     {
@@ -27,7 +24,7 @@ final class StringHelper
         } catch (Throwable $e) {
             libxml_use_internal_errors($internalErrors);
 
-            throw new RuntimeException(trans('larate::error.badxml', ['message' => $e->getMessage()]));
+            throw new RuntimeException(trans('larate::error.badxml', ['message' => $e->getMessage()]), $e->getCode(), $e);
         }
 
         return $xml;
