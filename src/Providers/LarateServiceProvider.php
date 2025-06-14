@@ -7,9 +7,11 @@ use Dostrog\Larate\Commands\InstallLarate;
 use Dostrog\Larate\Contracts\ExchangeRateService;
 use Dostrog\Larate\Larate;
 use Illuminate\Support\ServiceProvider;
+use Override;
 
 class LarateServiceProvider extends ServiceProvider
 {
+    #[Override]
     public function register(): void
     {
         // Automatically apply the package configuration

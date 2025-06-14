@@ -1,6 +1,10 @@
-name: Check & fix styling
+name: PHP CS Fixer
 
-on: [push]
+on:
+  push:
+    branches-ignore:
+      - master
+  workflow_dispatch:
 
 jobs:
   php-cs-fixer:
@@ -9,15 +13,20 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
         with:
-          ref: ${{ github.head_ref }}
+          php-version: '8.3'
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
+          coverage: none
+          tools: php-cs-fixer:v3
 
       - name: Run PHP CS Fixer
-        uses: docker://oskarstark/php-cs-fixer-ga
-        with:
-          args: --config=.php-cs-fixer.dist.php --allow-risky=yes
+        run: php-cs-fixer fix --allow-risky=yes --dry-run --diff
 
       - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v4
+        if: ${{ github.event_name == 'push' }}
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: Fix styling

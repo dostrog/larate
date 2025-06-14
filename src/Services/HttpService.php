@@ -17,7 +17,7 @@ abstract class HttpService implements ExchangeRateService
     public string $url = '';
     public Factory $http;
 
-    public function __construct(Factory $http = null)
+    public function __construct(?Factory $http = null)
     {
         $this->http = $http ?? new Factory();
     }
@@ -25,7 +25,7 @@ abstract class HttpService implements ExchangeRateService
     /**
      * @inheritDoc
      */
-    abstract public function getExchangeRate(CurrencyPair $currencyPair, DateTimeInterface $date = null): ExchangeRateContract;
+    abstract public function getExchangeRate(CurrencyPair $currencyPair, ?DateTimeInterface $date = null): ExchangeRateContract;
 
     /**
      * @inheritDoc
